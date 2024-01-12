@@ -1,4 +1,9 @@
 .{
     .name = "libuv",
     .version = "1.47.0",
+
+    .paths = .{
+        "build.zig",
+        "libuv/",
+    },
 }
