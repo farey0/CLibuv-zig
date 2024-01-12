@@ -9,7 +9,6 @@
 
  TODO/Questions :
 
-     - Windows mingw?
      - Add the libuv tests to this build ?
      - See Solaris if
      - quid of OS390/OS400?
