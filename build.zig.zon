@@ -1,6 +1,12 @@
 .{
     .name = "libuv",
     .version = "1.47.0",
+    .dependencies = .{
+        .libuv_src = .{
+            .url = "https://github.com/libuv/libuv/archive/refs/tags/v1.47.0.tar.gz",
+            .hash = "1220e9562d6749802cb1c19cecce621766ff63b896e8cf6ec6c8760da43114128d69",
+        },
+    },
 
     .paths = .{
         "build.zig",

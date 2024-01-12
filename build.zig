@@ -25,13 +25,12 @@ fn BoolToInt(myBool: bool) usize {
     return if (myBool) 1 else 0;
 }
 
-const root = BuildDir() ++ "/libuv/";
-const includePath = root ++ "include";
-
 pub fn build(b: *std.Build) !void {
     const resolvedtarget = b.standardTargetOptions(.{});
     const target = resolvedtarget.result;
     const optimize = b.standardOptimizeOption(.{});
+
+    const libuvSrc = b.dependency("libuv_src", .{});
 
     // build option following libuv/CMakeLists.txt
     const qemu = b.option(bool, "qemu", "build for qemu") orelse false;
@@ -228,80 +227,87 @@ pub fn build(b: *std.Build) !void {
         lib.linkSystemLibrary(libName);
     }
 
-    lib.addIncludePath(.{ .path = includePath });
-    lib.addIncludePath(.{ .path = root ++ "src/" });
+    lib.addIncludePath(libuvSrc.path("include/"));
+    lib.addIncludePath(libuvSrc.path("src/"));
 
-    lib.installHeadersDirectory(includePath, "");
+    lib.installHeadersDirectoryOptions(.{
+        .source_dir = libuvSrc.path("include/"),
+        .install_dir = .header,
+        .install_subdir = "",
+    });
 
     lib.addCSourceFiles(.{
+        .dependency = libuvSrc,
         .files = &.{
-            root ++ "src/fs-poll.c",
-            root ++ "src/idna.c",
-            root ++ "src/inet.c",
-            root ++ "src/random.c",
-            root ++ "src/strscpy.c",
-            root ++ "src/strtok.c",
-            root ++ "src/threadpool.c",
-            root ++ "src/timer.c",
-            root ++ "src/uv-common.c",
-            root ++ "src/uv-data-getter-setters.c",
-            root ++ "src/version.c",
+            "src/fs-poll.c",
+            "src/idna.c",
+            "src/inet.c",
+            "src/random.c",
+            "src/strscpy.c",
+            "src/strtok.c",
+            "src/threadpool.c",
+            "src/timer.c",
+            "src/uv-common.c",
+            "src/uv-data-getter-setters.c",
+            "src/version.c",
         },
         .flags = cFlags.items,
     });
 
     if (target.os.tag == .windows) {
         lib.addCSourceFiles(.{
+            .dependency = libuvSrc,
             .files = &.{
-                root ++ "src/win/async.c",
-                root ++ "src/win/core.c",
-                root ++ "src/win/detect-wakeup.c",
-                root ++ "src/win/dl.c",
-                root ++ "src/win/error.c",
-                root ++ "src/win/fs.c",
-                root ++ "src/win/fs-event.c",
-                root ++ "src/win/getaddrinfo.c",
-                root ++ "src/win/getnameinfo.c",
-                root ++ "src/win/handle.c",
-                root ++ "src/win/loop-watcher.c",
-                root ++ "src/win/pipe.c",
-                root ++ "src/win/thread.c",
-                root ++ "src/win/poll.c",
-                root ++ "src/win/process.c",
-                root ++ "src/win/process-stdio.c",
-                root ++ "src/win/signal.c",
-                root ++ "src/win/snprintf.c",
-                root ++ "src/win/stream.c",
-                root ++ "src/win/tcp.c",
-                root ++ "src/win/tty.c",
-                root ++ "src/win/udp.c",
-                root ++ "src/win/util.c",
-                root ++ "src/win/winapi.c",
-                root ++ "src/win/winsock.c",
+                "src/win/async.c",
+                "src/win/core.c",
+                "src/win/detect-wakeup.c",
+                "src/win/dl.c",
+                "src/win/error.c",
+                "src/win/fs.c",
+                "src/win/fs-event.c",
+                "src/win/getaddrinfo.c",
+                "src/win/getnameinfo.c",
+                "src/win/handle.c",
+                "src/win/loop-watcher.c",
+                "src/win/pipe.c",
+                "src/win/thread.c",
+                "src/win/poll.c",
+                "src/win/process.c",
+                "src/win/process-stdio.c",
+                "src/win/signal.c",
+                "src/win/snprintf.c",
+                "src/win/stream.c",
+                "src/win/tcp.c",
+                "src/win/tty.c",
+                "src/win/udp.c",
+                "src/win/util.c",
+                "src/win/winapi.c",
+                "src/win/winsock.c",
             },
             .flags = cFlags.items,
         });
     } else {
         lib.addCSourceFiles(.{
+            .dependency = libuvSrc,
             .files = &.{
-                root ++ "src/unix/async.c",
-                root ++ "src/unix/core.c",
-                root ++ "src/unix/dl.c",
-                root ++ "src/unix/fs.c",
-                root ++ "src/unix/getaddrinfo.c",
-                root ++ "src/unix/getnameinfo.c",
-                root ++ "src/unix/loop-watcher.c",
-                root ++ "src/unix/loop.c",
-                root ++ "src/unix/pipe.c",
-                root ++ "src/unix/poll.c",
-                root ++ "src/unix/process.c",
-                root ++ "src/unix/random-devurandom.c",
-                root ++ "src/unix/signal.c",
-                root ++ "src/unix/stream.c",
-                root ++ "src/unix/tcp.c",
-                root ++ "src/unix/thread.c",
-                root ++ "src/unix/tty.c",
-                root ++ "src/unix/udp.c",
+                "src/unix/async.c",
+                "src/unix/core.c",
+                "src/unix/dl.c",
+                "src/unix/fs.c",
+                "src/unix/getaddrinfo.c",
+                "src/unix/getnameinfo.c",
+                "src/unix/loop-watcher.c",
+                "src/unix/loop.c",
+                "src/unix/pipe.c",
+                "src/unix/poll.c",
+                "src/unix/process.c",
+                "src/unix/random-devurandom.c",
+                "src/unix/signal.c",
+                "src/unix/stream.c",
+                "src/unix/tcp.c",
+                "src/unix/thread.c",
+                "src/unix/tty.c",
+                "src/unix/udp.c",
             },
             .flags = cFlags.items,
         });
@@ -309,9 +315,10 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .aix) {
         lib.addCSourceFiles(.{
+            .dependency = libuvSrc,
             .files = &.{
-                root ++ "src/unix/aix.c",
-                root ++ "src/unix/aix-common.c",
+                "src/unix/aix.c",
+                "src/unix/aix-common.c",
             },
             .flags = cFlags.items,
         });
@@ -319,12 +326,13 @@ pub fn build(b: *std.Build) !void {
 
     if (target.abi == .android) {
         lib.addCSourceFiles(.{
+            .dependency = libuvSrc,
             .files = &.{
-                root ++ "src/unix/linux.c",
-                root ++ "src/unix/procfs-exepath.c",
-                root ++ "src/unix/random-getentropy.c",
-                root ++ "src/unix/random-getrandom.c",
-                root ++ "src/unix/random-sysctl-linux.c",
+                "src/unix/linux.c",
+                "src/unix/procfs-exepath.c",
+                "src/unix/random-getentropy.c",
+                "src/unix/random-getrandom.c",
+                "src/unix/random-sysctl-linux.c",
             },
             .flags = cFlags.items,
         });
@@ -332,8 +340,9 @@ pub fn build(b: *std.Build) !void {
 
     if (target.isDarwin() or target.os.tag == .linux or target.abi == .android) {
         lib.addCSourceFiles(.{
+            .dependency = libuvSrc,
             .files = &.{
-                root ++ "src/unix/proctitle.c",
+                "src/unix/proctitle.c",
             },
             .flags = cFlags.items,
         });
@@ -341,8 +350,9 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .dragonfly or target.os.tag == .freebsd) {
         lib.addCSourceFiles(.{
+            .dependency = libuvSrc,
             .files = &.{
-                root ++ "src/unix/freebsd.c",
+                "src/unix/freebsd.c",
             },
             .flags = cFlags.items,
         });
@@ -350,9 +360,10 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .dragonfly or target.os.tag == .freebsd or target.os.tag == .netbsd or target.os.tag == .openbsd) {
         lib.addCSourceFiles(.{
+            .dependency = libuvSrc,
             .files = &.{
-                root ++ "src/unix/posix-hrtime.c",
-                root ++ "src/unix/bsd-proctitle.c",
+                "src/unix/posix-hrtime.c",
+                "src/unix/bsd-proctitle.c",
             },
             .flags = cFlags.items,
         });
@@ -360,9 +371,10 @@ pub fn build(b: *std.Build) !void {
 
     if (target.isDarwin() or target.os.tag == .dragonfly or target.os.tag == .freebsd or target.os.tag == .netbsd or target.os.tag == .openbsd) {
         lib.addCSourceFiles(.{
+            .dependency = libuvSrc,
             .files = &.{
-                root ++ "src/unix/bsd-ifaddrs.c",
-                root ++ "src/unix/kqueue.c",
+                "src/unix/bsd-ifaddrs.c",
+                "src/unix/kqueue.c",
             },
             .flags = cFlags.items,
         });
@@ -370,8 +382,9 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .freebsd) {
         lib.addCSourceFiles(.{
+            .dependency = libuvSrc,
             .files = &.{
-                root ++ "src/unix/random-getrandom.c",
+                "src/unix/random-getrandom.c",
             },
             .flags = cFlags.items,
         });
@@ -379,8 +392,9 @@ pub fn build(b: *std.Build) !void {
 
     if (target.isDarwin() or target.os.tag == .openbsd) {
         lib.addCSourceFiles(.{
+            .dependency = libuvSrc,
             .files = &.{
-                root ++ "src/unix/random-getentropy.c",
+                "src/unix/random-getentropy.c",
             },
             .flags = cFlags.items,
         });
@@ -388,10 +402,11 @@ pub fn build(b: *std.Build) !void {
 
     if (target.isDarwin()) {
         lib.addCSourceFiles(.{
+            .dependency = libuvSrc,
             .files = &.{
-                root ++ "src/unix/darwin-proctitle.c",
-                root ++ "src/unix/darwin.c",
-                root ++ "src/unix/fsevents.c",
+                "src/unix/darwin-proctitle.c",
+                "src/unix/darwin.c",
+                "src/unix/fsevents.c",
             },
             .flags = cFlags.items,
         });
@@ -399,11 +414,12 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .linux) {
         lib.addCSourceFiles(.{
+            .dependency = libuvSrc,
             .files = &.{
-                root ++ "src/unix/linux.c",
-                root ++ "src/unix/procfs-exepath.c",
-                root ++ "src/unix/random-getrandom.c",
-                root ++ "src/unix/random-sysctl-linux.c",
+                "src/unix/linux.c",
+                "src/unix/procfs-exepath.c",
+                "src/unix/random-getrandom.c",
+                "src/unix/random-sysctl-linux.c",
             },
             .flags = cFlags.items,
         });
@@ -411,8 +427,9 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .netbsd) {
         lib.addCSourceFiles(.{
+            .dependency = libuvSrc,
             .files = &.{
-                root ++ "src/unix/netbsd.c",
+                "src/unix/netbsd.c",
             },
             .flags = cFlags.items,
         });
@@ -420,8 +437,9 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .openbsd) {
         lib.addCSourceFiles(.{
+            .dependency = libuvSrc,
             .files = &.{
-                root ++ "src/unix/openbsd.c",
+                "src/unix/openbsd.c",
             },
             .flags = cFlags.items,
         });
@@ -429,9 +447,10 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .solaris) {
         lib.addCSourceFiles(.{
+            .dependency = libuvSrc,
             .files = &.{
-                root ++ "src/unix/no-proctitle.c",
-                root ++ "src/unix/sunos.c",
+                "src/unix/no-proctitle.c",
+                "src/unix/sunos.c",
             },
             .flags = cFlags.items,
         });
@@ -439,13 +458,14 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .haiku) {
         lib.addCSourceFiles(.{
+            .dependency = libuvSrc,
             .files = &.{
-                root ++ "src/unix/haiku.c",
-                root ++ "src/unix/bsd-ifaddrs.c",
-                root ++ "src/unix/no-fsevents.c",
-                root ++ "src/unix/no-proctitle.c",
-                root ++ "src/unix/posix-hrtime.c",
-                root ++ "src/unix/posix-poll.c",
+                "src/unix/haiku.c",
+                "src/unix/bsd-ifaddrs.c",
+                "src/unix/no-fsevents.c",
+                "src/unix/no-proctitle.c",
+                "src/unix/posix-hrtime.c",
+                "src/unix/posix-poll.c",
             },
             .flags = cFlags.items,
         });
