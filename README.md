@@ -8,6 +8,7 @@
  in your define before import
 
  TODO/Questions :
+ 
      - Add the libuv tests to this build ?
      - See Solaris if
      - quid of OS390/OS400?
