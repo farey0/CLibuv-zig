@@ -1,6 +1,6 @@
  Current libuv version : 1.47.0
 
- As of now i only tested it for windows with msvc triplet.
+ As of now i only tested it for windows.
  Normally it should work on other platforms if i didn't made
  any errors translating the CMakeFiles.txt
 
