@@ -1,7 +1,7 @@
  Current libuv version : 1.47.0
 
  As of now i only tested it for windows.
- Normally it should work on other platforms if i didn't made
+ Normally it should work on other platforms if i didn't make
  any errors translating the CMakeFiles.txt
 
  If you use it as shared lib, you must add "USING_UV_SHARED=1"
