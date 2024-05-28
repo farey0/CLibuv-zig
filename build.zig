@@ -237,7 +237,7 @@ pub fn build(b: *std.Build) !void {
     });
 
     lib.addCSourceFiles(.{
-        .dependency = libuvSrc,
+        .root = libuvSrc.path(""),
         .files = &.{
             "src/fs-poll.c",
             "src/idna.c",
@@ -256,7 +256,7 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .windows) {
         lib.addCSourceFiles(.{
-            .dependency = libuvSrc,
+            .root = libuvSrc.path(""),
             .files = &.{
                 "src/win/async.c",
                 "src/win/core.c",
@@ -288,7 +288,7 @@ pub fn build(b: *std.Build) !void {
         });
     } else {
         lib.addCSourceFiles(.{
-            .dependency = libuvSrc,
+            .root = libuvSrc.path(""),
             .files = &.{
                 "src/unix/async.c",
                 "src/unix/core.c",
@@ -315,7 +315,7 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .aix) {
         lib.addCSourceFiles(.{
-            .dependency = libuvSrc,
+            .root = libuvSrc.path(""),
             .files = &.{
                 "src/unix/aix.c",
                 "src/unix/aix-common.c",
@@ -326,7 +326,7 @@ pub fn build(b: *std.Build) !void {
 
     if (target.abi == .android) {
         lib.addCSourceFiles(.{
-            .dependency = libuvSrc,
+            .root = libuvSrc.path(""),
             .files = &.{
                 "src/unix/linux.c",
                 "src/unix/procfs-exepath.c",
@@ -340,7 +340,7 @@ pub fn build(b: *std.Build) !void {
 
     if (target.isDarwin() or target.os.tag == .linux or target.abi == .android) {
         lib.addCSourceFiles(.{
-            .dependency = libuvSrc,
+            .root = libuvSrc.path(""),
             .files = &.{
                 "src/unix/proctitle.c",
             },
@@ -350,7 +350,7 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .dragonfly or target.os.tag == .freebsd) {
         lib.addCSourceFiles(.{
-            .dependency = libuvSrc,
+            .root = libuvSrc.path(""),
             .files = &.{
                 "src/unix/freebsd.c",
             },
@@ -360,7 +360,7 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .dragonfly or target.os.tag == .freebsd or target.os.tag == .netbsd or target.os.tag == .openbsd) {
         lib.addCSourceFiles(.{
-            .dependency = libuvSrc,
+            .root = libuvSrc.path(""),
             .files = &.{
                 "src/unix/posix-hrtime.c",
                 "src/unix/bsd-proctitle.c",
@@ -371,7 +371,7 @@ pub fn build(b: *std.Build) !void {
 
     if (target.isDarwin() or target.os.tag == .dragonfly or target.os.tag == .freebsd or target.os.tag == .netbsd or target.os.tag == .openbsd) {
         lib.addCSourceFiles(.{
-            .dependency = libuvSrc,
+            .root = libuvSrc.path(""),
             .files = &.{
                 "src/unix/bsd-ifaddrs.c",
                 "src/unix/kqueue.c",
@@ -382,7 +382,7 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .freebsd) {
         lib.addCSourceFiles(.{
-            .dependency = libuvSrc,
+            .root = libuvSrc.path(""),
             .files = &.{
                 "src/unix/random-getrandom.c",
             },
@@ -392,7 +392,7 @@ pub fn build(b: *std.Build) !void {
 
     if (target.isDarwin() or target.os.tag == .openbsd) {
         lib.addCSourceFiles(.{
-            .dependency = libuvSrc,
+            .root = libuvSrc.path(""),
             .files = &.{
                 "src/unix/random-getentropy.c",
             },
@@ -402,7 +402,7 @@ pub fn build(b: *std.Build) !void {
 
     if (target.isDarwin()) {
         lib.addCSourceFiles(.{
-            .dependency = libuvSrc,
+            .root = libuvSrc.path(""),
             .files = &.{
                 "src/unix/darwin-proctitle.c",
                 "src/unix/darwin.c",
@@ -414,7 +414,7 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .linux) {
         lib.addCSourceFiles(.{
-            .dependency = libuvSrc,
+            .root = libuvSrc.path(""),
             .files = &.{
                 "src/unix/linux.c",
                 "src/unix/procfs-exepath.c",
@@ -427,7 +427,7 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .netbsd) {
         lib.addCSourceFiles(.{
-            .dependency = libuvSrc,
+            .root = libuvSrc.path(""),
             .files = &.{
                 "src/unix/netbsd.c",
             },
@@ -437,7 +437,7 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .openbsd) {
         lib.addCSourceFiles(.{
-            .dependency = libuvSrc,
+            .root = libuvSrc.path(""),
             .files = &.{
                 "src/unix/openbsd.c",
             },
@@ -447,7 +447,7 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .solaris) {
         lib.addCSourceFiles(.{
-            .dependency = libuvSrc,
+            .root = libuvSrc.path(""),
             .files = &.{
                 "src/unix/no-proctitle.c",
                 "src/unix/sunos.c",
@@ -458,7 +458,7 @@ pub fn build(b: *std.Build) !void {
 
     if (target.os.tag == .haiku) {
         lib.addCSourceFiles(.{
-            .dependency = libuvSrc,
+            .root = libuvSrc.path(""),
             .files = &.{
                 "src/unix/haiku.c",
                 "src/unix/bsd-ifaddrs.c",
