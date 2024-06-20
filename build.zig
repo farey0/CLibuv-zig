@@ -32,7 +32,14 @@ pub fn build(b: *std.Build) !void {
 
     const libuvSrc = b.dependency("libuv_src", .{});
 
+    const generateZigBinding = b.option(
+        bool,
+        "zigBinding",
+        "Generate Zig binding. Use this instead of cImport as it patches faulty translation",
+    ) orelse true;
+
     // build option following libuv/CMakeLists.txt
+
     const qemu = b.option(bool, "qemu", "build for qemu") orelse false;
     const asan = b.option(bool, "asan", "Enable AddressSanitizer (ASan)") orelse false;
     const msan = b.option(bool, "msan", "Enable MemorySanitizer (MSan)") orelse false;
@@ -474,4 +481,36 @@ pub fn build(b: *std.Build) !void {
     lib.linkLibC();
 
     b.installArtifact(lib);
+
+    if (generateZigBinding) {
+        const zBindings = b.addTranslateC(.{
+            .optimize = optimize,
+            .target = resolvedtarget,
+            .root_source_file = libuvSrc.path("include/uv.h"),
+        });
+
+        zBindings.addIncludeDir(libuvSrc.path("include").getPath(b));
+
+        const patcher = b.addExecutable(.{
+            .name = "patcher",
+            .optimize = .ReleaseFast,
+            .target = b.host,
+            .root_source_file = .{ .path = "patcher.zig" },
+        });
+
+        const run_patcher = b.addRunArtifact(patcher);
+
+        run_patcher.addFileArg(zBindings.getOutput());
+
+        run_patcher.step.dependOn(&patcher.step);
+        run_patcher.step.dependOn(&zBindings.step);
+
+        const write_file = b.addNamedWriteFiles("cLibuv");
+
+        write_file.addCopyFileToSource(zBindings.getOutput(), "c.zig");
+
+        write_file.step.dependOn(&run_patcher.step);
+
+        b.getInstallStep().dependOn(&write_file.step);
+    }
 }
