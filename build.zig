@@ -237,11 +237,7 @@ pub fn build(b: *std.Build) !void {
     lib.addIncludePath(libuvSrc.path("include/"));
     lib.addIncludePath(libuvSrc.path("src/"));
 
-    lib.installHeadersDirectoryOptions(.{
-        .source_dir = libuvSrc.path("include/"),
-        .install_dir = .header,
-        .install_subdir = "",
-    });
+    lib.installHeadersDirectory(libuvSrc.path("include/"), "", .{});
 
     lib.addCSourceFiles(.{
         .root = libuvSrc.path(""),
@@ -495,7 +491,7 @@ pub fn build(b: *std.Build) !void {
             .name = "patcher",
             .optimize = .ReleaseFast,
             .target = b.host,
-            .root_source_file = .{ .path = "patcher.zig" },
+            .root_source_file = .{ .cwd_relative = "patcher.zig" },
         });
 
         const run_patcher = b.addRunArtifact(patcher);
