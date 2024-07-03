@@ -508,5 +508,15 @@ pub fn build(b: *std.Build) !void {
         write_file.step.dependOn(&run_patcher.step);
 
         lib.step.dependOn(&write_file.step);
+
+        const cLibuv = b.addModule(
+            "cLibuv",
+            .{
+                .root_source_file = zBindings.getOutput(),
+                .link_libc = true,
+            },
+        );
+
+        cLibuv.linkLibrary(lib);
     }
 }
