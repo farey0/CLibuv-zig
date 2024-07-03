@@ -491,7 +491,7 @@ pub fn build(b: *std.Build) !void {
             .name = "patcher",
             .optimize = .ReleaseFast,
             .target = b.host,
-            .root_source_file = .{ .cwd_relative = "patcher.zig" },
+            .root_source_file = b.path("patcher.zig"),
         });
 
         const run_patcher = b.addRunArtifact(patcher);
@@ -507,6 +507,6 @@ pub fn build(b: *std.Build) !void {
 
         write_file.step.dependOn(&run_patcher.step);
 
-        b.getInstallStep().dependOn(&write_file.step);
+        lib.step.dependOn(&write_file.step);
     }
 }
