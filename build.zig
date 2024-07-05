@@ -485,6 +485,10 @@ pub fn build(b: *std.Build) !void {
             .root_source_file = libuvSrc.path("include/uv.h"),
         });
 
+        // see https://github.com/ziglang/zig/issues/20065
+        if (target.abi == .msvc)
+            zBindings.defineCMacro("MIDL_INTERFACE", "struct");
+
         zBindings.addIncludeDir(libuvSrc.path("include").getPath(b));
 
         const patcher = b.addExecutable(.{
