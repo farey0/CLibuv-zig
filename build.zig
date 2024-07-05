@@ -487,7 +487,7 @@ pub fn build(b: *std.Build) !void {
 
         // see https://github.com/ziglang/zig/issues/20065
         if (target.abi == .msvc)
-            zBindings.defineCMacro("MIDL_INTERFACE", "struct");
+            zBindings.defineCMacroRaw("MIDL_INTERFACE=struct");
 
         zBindings.addIncludeDir(libuvSrc.path("include").getPath(b));
 
