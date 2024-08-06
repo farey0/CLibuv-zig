@@ -107,6 +107,7 @@ pub fn build(b: *std.Build) !void {
         try cFlags.appendSlice(&.{
             "-DWIN32_LEAN_AND_MEAN",
             "-D_WIN32_WINNT=0x0602",
+            "-D_CRT_DECLARE_NONSTDC_NAMES=0",
         });
 
         try systemLibs.appendSlice(&.{
@@ -486,8 +487,10 @@ pub fn build(b: *std.Build) !void {
         });
 
         // see https://github.com/ziglang/zig/issues/20065
-        if (target.abi == .msvc)
+        if (target.abi == .msvc) {
             zBindings.defineCMacroRaw("MIDL_INTERFACE=struct");
+            zBindings.defineCMacroRaw("_UCRT"); // zig links against ucrt, not MSVCRT
+        }
 
         zBindings.addIncludeDir(libuvSrc.path("include").getPath(b));
 
