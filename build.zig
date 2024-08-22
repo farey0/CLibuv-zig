@@ -1,6 +1,6 @@
 /// Adapted from : https://github.com/libuv/libuv/blob/v1.47.0/CMakeLists.txt
 ///
-/// Current libuv version : 1.47.0
+/// Current libuv version : 1.48.0
 ///
 /// As of now i only tested it for windows.
 /// Normally it should work on other platforms if i didn't made
