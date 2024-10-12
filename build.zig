@@ -492,7 +492,7 @@ pub fn build(b: *std.Build) !void {
             zBindings.defineCMacroRaw("_UCRT"); // zig links against ucrt, not MSVCRT
         }
 
-        zBindings.addIncludeDir(libuvSrc.path("include").getPath(b));
+        zBindings.addIncludePath(libuvSrc.path("include"));
 
         const patcher = b.addExecutable(.{
             .name = "patcher",
@@ -510,7 +510,7 @@ pub fn build(b: *std.Build) !void {
 
         const write_file = b.addNamedWriteFiles("cLibuv");
 
-        write_file.addCopyFileToSource(zBindings.getOutput(), "c.zig");
+        const czigPath = write_file.addCopyFile(zBindings.getOutput(), "c.zig");
 
         write_file.step.dependOn(&run_patcher.step);
 
@@ -519,7 +519,7 @@ pub fn build(b: *std.Build) !void {
         const cLibuv = b.addModule(
             "cLibuv",
             .{
-                .root_source_file = zBindings.getOutput(),
+                .root_source_file = czigPath,
                 .link_libc = true,
             },
         );
