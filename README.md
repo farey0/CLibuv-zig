@@ -1,4 +1,4 @@
- Current libuv version : 1.48.0
+ Current libuv version : 1.50.0
 
  As of now i only tested it for windows.
  TCP functions does not work on windows. Casting overlapped to libuv request make a segfault
