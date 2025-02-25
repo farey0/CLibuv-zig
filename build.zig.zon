@@ -1,6 +1,6 @@
 .{
     .name = "libuv",
-    .version = "1.48.0",
+    .version = "1.50.0",
     .dependencies = .{
         .libuv_src = .{
             .url = "https://github.com/libuv/libuv/archive/refs/tags/v1.50.0.tar.gz",
