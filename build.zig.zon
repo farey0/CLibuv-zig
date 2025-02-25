@@ -3,8 +3,8 @@
     .version = "1.48.0",
     .dependencies = .{
         .libuv_src = .{
-            .url = "https://github.com/libuv/libuv/archive/refs/tags/v1.48.0.tar.gz",
-            .hash = "1220c2e1269cfee3735a7331f1fa4c13aa3e4f355fca5b402be3ea72a464c76f1324",
+            .url = "https://github.com/libuv/libuv/archive/refs/tags/v1.50.0.tar.gz",
+            .hash = "12207ac22e5e40afe515b7c319237785113c97ee84a75f7c66c1a0e7cc6e743debeb",
         },
     },
 

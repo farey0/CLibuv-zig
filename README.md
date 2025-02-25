@@ -2,6 +2,7 @@
 
  As of now i only tested it for windows.
  TCP functions does not work on windows. Casting overlapped to libuv request make a segfault
+ No hurd support
 
  see :
  Illegal instruction at address 0x102ab0
